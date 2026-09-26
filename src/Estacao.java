@@ -41,7 +41,15 @@ public class Estacao {
      * @return true se iniciou o aluguel; false se não encontrou ou não está disponivel
      */
     public boolean liberarDisponivel(String codigo) {
-        //TODO Tarefa 1
+        for(Patinete patinetes : patinetes){
+            if (codigo == patinetes.getCodigo()){
+                String estado = patinetes.estado();
+                if (estado.equals("indisponivel")|| estado.equals("em_uso")){
+                    return false;
+                }  
+                return true;   
+            }
+        }
         return false;
     }
 
@@ -70,13 +78,31 @@ public class Estacao {
     }
 
     /**
-     * em_uso / (disponivel + em_uso).
-     * Frota sem disponivel nem em_uso → 0.
-     * Só em_uso (sem disponivel) → Double.MAX_VALUE.
+     * em_uso / (disponivel + em_uso). // se tem disp
+     * Frota sem disponivel nem em_uso → 0. // sem nenhum
+     * Só em_uso (sem disponivel) → Double.MAX_VALUE. // return 20
      */
     public double aproveitamentoFrota() {
-        //TODO Tarefa 2
-        return 0.0;
+        double totalDisponiveis = 0;
+        double em_uso = 0;
+        double indisp = 0;
+        for (Patinete patinetes : patinetes){
+            String estado = patinetes.estado();
+            if(estado == "disponivel"){
+                totalDisponiveis++;
+            }else if(estado == "em_uso"){
+                em_uso++;
+            }else{
+                indisp++;
+            }
+        }
+        if(disp > 0){
+            return em_uso / (disp + em_uso);
+        } else if (disp == 0 || em_uso == 0){
+            return 0;
+        }else{
+            return 100;
+        }
     }
 
     /**
